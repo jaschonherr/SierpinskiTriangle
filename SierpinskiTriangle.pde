@@ -1,36 +1,30 @@
-public int base = 10;
+public int base = 0;
+public int squares = 1;
+public int speed = 4;
+public color myColor = color(0, 0, 0);
 public boolean[] keys = new boolean[128];
 public void setup() {
   size(800, 800);
-  background(0);
+  background(200);
 }
 
 public void draw() {
-  background(0);
-  if(base <= width/2 && base >= 0) {
-    if(keys['d']) {
-      base += 10;
-    }
-    if(keys['a']) {
-      base -= 10;
+  background(200);
+  for(int i = 0; i < squares; i++) {
+    for(int j = 0; j < squares; j++) {
+      sierpinski(i*(width/squares), height - j*(height/squares), base);
     }
   }
-  if(base < 0) {  
-    base += 10;
+  base += speed;
+  if(base <= 0 || base >= width/squares) {
+    speed = -speed;
   }
-  if(base > width/2) {  
-    base -= 10;
-  }
-  sierpinski(0, height, base);
-  sierpinski(0, height/2, base);
-  sierpinski(width/2, height, base);
-  sierpinski(width/2, height/2, base);
 }
 
 public void sierpinski(int x, int y, int len) {
-  if(len <= 12) {
+  if(len <= 40) {
     noStroke();
-    fill(0, 0, 255);
+    fill(myColor);
     triangle(x, y, x + len/2, y - len, x + len, y);
   } else {
     sierpinski(x, y, len/2);
@@ -40,9 +34,19 @@ public void sierpinski(int x, int y, int len) {
 }
 
 void keyPressed() {
-  keys[key] = true;
-}
-
-public void keyReleased() {
-  keys[key] = false;
+  if(key == 'w') {
+    myColor = color((int)(Math.random()*255), (int)(Math.random()*255), (int)(Math.random()*255));
+  }
+  if(key == 'd') {
+    if(squares < 6) {
+      base = 1;
+      squares++;
+    }
+  }
+  if(key == 'a') {
+    if(squares >= 2) {
+      base = 1;
+      squares--;
+    }
+  }
 }
